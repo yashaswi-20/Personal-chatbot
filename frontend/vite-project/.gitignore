@@ -1,4 +1,6 @@
 # Logs
+./frontend/vite-project/src/api.js
+test.py
 logs
 *.log
 npm-debug.log*

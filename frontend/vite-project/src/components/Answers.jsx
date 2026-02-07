@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
-const Answers=({ans,index})=>{
-    console.log(index)
+const Answers=({ans,index,totalresult,type})=>{
+   // console.log(index)
+   //console.log(ans)
     const [heading,setHeading]=useState(false);
     const[answer,setAnswer]=useState('')
     useEffect(()=>{
-
         if(checkHeading(ans)){
             setHeading(true)
             setAnswer(replaceHeadingStart(ans))
@@ -22,9 +22,9 @@ const Answers=({ans,index})=>{
     return(
         <>
         {
-        index==0?<span className="py-2 block text-lg ">{answer}</span>:
-        heading?<span className="py-2 block text-lg ">{answer}</span>:
-        <span className="pl-5">{ans}</span>
+        index===0 && totalresult>1?<span className="py-2 block text-lg text-white ">{answer || ans}</span>:
+        heading?<span className="py-2 block text-lg text-white ">{answer}</span>:
+        <span className={type=='q'?'pl-1':'pl-5'}>{ans}</span>
         }
         </>
     )
