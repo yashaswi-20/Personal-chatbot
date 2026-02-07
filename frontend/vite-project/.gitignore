@@ -1,5 +1,5 @@
 # Logs
-./src/api.js
+./frontend/vite-project/src/api.js
 test.py
 logs
 *.log
