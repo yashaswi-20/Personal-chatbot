@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { URL } from "./constant";
-import { API } from "./api";
+
 
 
 import RecentSearch from "./components/RecentSearch";
