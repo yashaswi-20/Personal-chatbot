@@ -3,6 +3,7 @@ import "./App.css";
 import { URL } from "./constant";
 import { API } from "./api";
 
+
 import RecentSearch from "./components/RecentSearch";
 import QuestionAnswer from "./components/QuestionAnswer";
 
@@ -32,7 +33,7 @@ function App() {
       ],
     };
 
-    let response = await fetch(URL, {
+    let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${import.meta.env.VITE_CHAT_API}`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
