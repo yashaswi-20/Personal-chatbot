@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { URL } from "./constant";
 import { API } from "./api";
-import Answers from "./components/Answers";
+
+import RecentSearch from "./components/RecentSearch";
+import QuestionAnswer from "./components/QuestionAnswer";
 
 function App() {
   const [question, setQuestion] = useState("");
@@ -46,7 +48,7 @@ function App() {
     // console.log(result.candidates[0].content.parts[0].text)
     setResult([
       ...result,
-      { type: "q", text: question },
+      { type: "q", text: [question] },
       { type: "a", text: dataString },
     ]);
 
@@ -70,60 +72,43 @@ function App() {
   }, [result]);
 
   // console.log(result);
-  const clearHistory = () => {
-    localStorage.clear();
-    setHistory([]);
-  };
+
 
   const isEnter = (e) => {
     if (e.key == "Enter") generate();
   };
 
-  const showHistory = (item) => {
-    console.log(item);
-    setQuestion(item);
-    setSearchHistory(item);
-  };
+ 
   useEffect(() => {
     if (!searchHistory) return;
     generate(true);
   }, [searchHistory]);
 
+// dark mode
+const [darkmode,setDarkmode]=useState('dark')
+useEffect(()=>{
+  console.log(darkmode)
+  if(darkmode=='dark'){
+    document.documentElement.classList.add('dark')
+  }else{
+    document.documentElement.classList.remove('dark')
+  }
+},[darkmode])
+
+//
+
+
   return (
+    <div className={darkmode=='dark'?'dark':'light'}>
     <div className="grid grid-cols-5">
-      <div className="col-span-1 bg-zinc-700 h-screen">
-        <ul>
-          <div className="flex justify-center">
-            <span className="text-white text-center p-3 text-xl">
-              Recent Search
-            </span>
-            <button className="hover:cursor-pointer" onClick={clearHistory}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="20px"
-                viewBox="0 -960 960 960"
-                width="20px"
-                fill="#e3e3e3"
-              >
-                <path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z" />
-              </svg>
-            </button>
-          </div>
-          {history &&
-            history.map((item, idx) => (
-              <li
-                key={idx}
-                onClick={() => showHistory(item)}
-                className="text-zinc-300 hover:bg-zinc-500 cursor-pointer truncate pl-3"
-              >
-                {item}
-              </li>
-            ))}
-        </ul>
-      </div>
+      <select  onChange={(e)=>setDarkmode(e.target.value)} className="fixed text-white  bottom-0 p-3 bg-zinc-600">
+        <option value='dark'>Dark</option>
+        <option value='light'>Light</option>
+      </select>
+        <RecentSearch history={history} setQuestion={setQuestion} setSearchHistory={setSearchHistory} setHistory={setHistory}/>
 
       <div className="col-span-4 p-10">
-        <h1 className=" text-center text-4xl bg-clip-text text-transparent bg-gradient-to-r from-pink-700 to-violet-700"
+        <h1 className=" text-center text-4xl bg-clip-text text-transparent bg-linear-to-r from-pink-700 to-violet-700"
         >Hello User, Ask Me Anything</h1>
         {
           loader?<div role="status" className="flex justify-center">
@@ -153,41 +138,16 @@ function App() {
           ref={scroolToAns}
           className="container h-150 overflow-scroll scrollbar-hide"
         >
-          <div className="text-zinc-300">
+          <div className="dark:text-zinc-300 text-zinc-800">
             <ul>
               {result.map((item, idx) => (
-                <div
-                  key={idx}
-                  className={item.type == "q" ? "flex justify-end" : ""}
-                >
-                  {item.type == "q" ? (
-                    <li className="text-right border-5 bg-zinc-700 border-zinc-700 w-fit rounded-tl-3xl rounded-bl-3xl rounded-br-3xl">
-                      <Answers
-                        totalresult={1}
-                        ans={item.text}
-                        index={idx}
-                        type={item.type}
-                      />{" "}
-                    </li>
-                  ) : (
-                    item.text.map((anstext, ansidx) => (
-                      <li key={ansidx} className="text-left">
-                        <Answers
-                          totalresult={item.text.length}
-                          ans={anstext}
-                          index={ansidx}
-                          type={item.type}
-                        />{" "}
-                      </li>
-                    ))
-                  )}
-                </div>
+                <QuestionAnswer item={item} idx={idx} key={idx}/>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="bg-zinc-700 w-1/2 text-white m-auto rounded-4xl border p-1 pr-5 border-zinc-600 flex">
+        <div className="dark:bg-zinc-700 bg-red-100 w-1/2 dark:text-white text-zinc-800 m-auto rounded-4xl border p-1 pr-5 dark:border-zinc-600 border-red-200 flex">
           <input
             type="text"
             value={question}
@@ -201,6 +161,7 @@ function App() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }
